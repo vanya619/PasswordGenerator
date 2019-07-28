@@ -217,8 +217,8 @@ WCHAR* GeneratePassword(DWORD flag)
 	char s_num[] = {
 		'1','2','3','4','5','6','7','8','9','0'};
 
-	DWORD len = MIN_PASS_LENGTH + rand() % (MAX_PASS_LENGTH - MIN_PASS_LENGTH);
-	CHAR* pass = new CHAR[++len];
+	CONST DWORD len = MIN_PASS_LENGTH + rand() % (MAX_PASS_LENGTH - MIN_PASS_LENGTH);
+	CHAR* pass = new CHAR[len + 1];
 	DWORD i = 0;
 
 	while (i < len)
@@ -239,16 +239,17 @@ WCHAR* GeneratePassword(DWORD flag)
 		}
 		else
 		{
-			//Если произошла некорректная генерация из за настроек, то перезапускаем генерацию для данного i
+			/*Если произошла некорректная генерация из за настроек,
+			  тогда пытаемся сгенерировать значение сначала.*/ 
 			continue;
 		}
 		++i;
 	}
-	pass[len - 1] = '\0';
+	pass[len] = '\0';
 
-	WCHAR* wPass = new WCHAR[len];
+	WCHAR* wPass = new WCHAR[len + 1];
 	size_t outSize;
-	mbstowcs_s(&outSize, wPass, len, pass, len - 1);
+	mbstowcs_s(&outSize, wPass, len + 1, pass, len);
 	delete[] pass;
 
 	return wPass;
